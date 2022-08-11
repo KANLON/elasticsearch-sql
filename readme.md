@@ -1,5 +1,7 @@
 # elasticsearch-sql
 
+Convert Elasticsearch DSL to SQL Or Convert Sql To Elasticsearch DSL 
+
 这个项目主要是将ElasticSearch DSL 转成 SQL 或者将 SQL 转成 ElasticSearch DSL 的工具模块 
 
 #  使用说明
@@ -87,4 +89,22 @@ public class SqlToEsDslUtilsTest {
 
 # 项目功能搭建思路
 
-主要使用Druid的SQL解析工具，将SQL按照各个节点分解，然后重新组装为ES的DSL信息
+主要使用Druid的SQL解析工具，将SQL解析成AST(抽象语法树)，然后重新组装为ES的DSL信息
+>在计算机科学中，抽象语法树（Abstract Syntax Tree，AST），或简称语法树（Syntax tree），是源代码语法结构的一种抽象表示。它以树状的形式表现编程语言的语法结构，树上的每个节点都表示源代码中的一种结构。
+
+
+```sql
+select * from test_t 
+where 
+user_id = 1 
+and (  
+product_id = 2 
+and (star_num = 4 or star_num = 5) 
+and banned = 1)
+```
+
+例如这样SQL 可以转为 以下的AST的结构：
+
+![sql-ast](./resource/images/sql-ast.png)
+
+然后根据这样的AST再组装为ES的DSL格式就可以了 
