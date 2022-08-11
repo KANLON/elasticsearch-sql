@@ -204,9 +204,11 @@ public class SelfDruidSqlUtils {
      * 解析sql获取sql中列的字段别名及其对应的表达式之前的关系，支持 单个select sql 和 union all sql
      * (注意如果查询中包含多个全部列查询*，例如：t.*,t2.* 则有可能会出错的，会把未归属的列，归属到t2中）
      *
-     * @param sql 要解析sql
+     * @param sql    要解析sql
+     * @param dbType db型
      * @return 字段别名及其对应的表达式的map，如果包含别名才放入该集合
-     **/
+     * @throws RuntimeException 运行时异常
+     */
     public static Map<String, String> getColumnExpressMap(String sql, com.alibaba.druid.DbType dbType) throws RuntimeException {
         Map<String, String> columnExpressMap = new HashMap<>(16);
         List<SQLStatement> sqlStatements;
@@ -530,6 +532,7 @@ public class SelfDruidSqlUtils {
      * @param sql       SQL 语句
      * @param condition where 条件
      * @param dbType    DB类型
+     * @return {@link String} 增加条件后的sql
      */
     public static String addWhereForAllSql(String sql, String condition, DbType dbType) {
         TemplateBuilderSqlExpr templateBuilderSqlExpr = handleConditionAndSql(sql, condition, dbType);
@@ -555,6 +558,7 @@ public class SelfDruidSqlUtils {
      * @param sql       SQL 语句
      * @param condition where 条件
      * @param dbType    DB类型
+     * @return {@link String}
      */
     public static String addHavingForGlobalSql(String sql, String condition, DbType dbType) {
         TemplateBuilderSqlExpr templateBuilderSqlExpr = handleConditionAndSql(sql, condition, dbType);
@@ -591,6 +595,7 @@ public class SelfDruidSqlUtils {
      * @param sql       SQL 语句
      * @param condition where 条件
      * @param dbType    DB类型
+     * @return {@link String} 添加条件后的sql
      */
     public static String addWhereForGlobalSql(String sql, String condition, DbType dbType) {
         TemplateBuilderSqlExpr templateBuilderSqlExpr = handleConditionAndSql(sql, condition, dbType);
@@ -644,6 +649,7 @@ public class SelfDruidSqlUtils {
      * @param sql              SQL 语句
      * @param groupByCondition groupBy 条件
      * @param dbType           DB类型
+     * @return {@link String} 添加group by条件后的sql
      */
     public static String addGroupBy(String sql, String groupByCondition, DbType dbType) {
         TemplateBuilderSqlExpr templateBuilderSqlExpr = handleConditionAndSql(sql, groupByCondition, dbType);
@@ -670,7 +676,7 @@ public class SelfDruidSqlUtils {
      *
      * @param sql    sql
      * @param dbType db类型
-     * @return {@link Set}<{@link String}> order by的字段集合
+     * @return order by的字段集合
      */
     public static Set<String> listOrderByFieldSet(String sql, DbType dbType) {
         Set<String> orderByFieldSet = new LinkedHashSet<>(16);
@@ -711,6 +717,7 @@ public class SelfDruidSqlUtils {
      * @param sql              select 查询的SQL 语句
      * @param orderByCondition 排序条件
      * @param dbType           DB类型
+     * @return 添加排序条件后的sql
      */
     public static String addOrderBy(String sql, String orderByCondition, DbType dbType) {
         if (StringUtils.isEmpty(sql) || StringUtils.isEmpty(orderByCondition)) {
@@ -766,10 +773,10 @@ public class SelfDruidSqlUtils {
     }
 
     /**
-     * 明确的命令
      * 去掉sql中的order by条件
      *
-     * @param sql 要去掉的sql
+     * @param sql    要去掉的sql
+     * @param dbType 数据库类型
      * @return java.lang.String 去掉order by后的sql
      **/
     public static String clearOrderBy(String sql, DbType dbType) {
@@ -795,6 +802,7 @@ public class SelfDruidSqlUtils {
      * 得到总条数的sql，从原sql中中
      *
      * @param sqlContent 要替换的sql的sql内容
+     * @param dbType     数据库类型
      * @return 替换后的计算总条数sql
      * @throws RuntimeException 解析失败则抛出异常
      */
@@ -970,7 +978,7 @@ public class SelfDruidSqlUtils {
      *
      * @param needFindString 需要找到字符串
      * @param pattern        模式
-     * @return {@link List<String>}
+     * @return 匹配的子字符串
      */
     private static List<String> findSubStrPattern(String needFindString, String pattern) {
         List<String> resultStrList = new ArrayList<>(10);
@@ -1079,7 +1087,7 @@ public class SelfDruidSqlUtils {
      * 临时的 用来存放变量的内部类
      *
      * @author zhangcanlong
-     * @date 2021/10/21
+     * @since 2021/10/21
      */
     @Data
     @AllArgsConstructor

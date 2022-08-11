@@ -2,17 +2,24 @@
 
 这个项目主要是将ElasticSearch DSL 转成 SQL 或者将 SQL 转成 ElasticSearch DSL 的工具模块 
 
-# 项目说明
-
-
-### 特点
-
-### 缺点
-
-
 #  使用说明
 
+maven 引用
+
+```pom
+
+<dependency>
+    <groupId>com.github.kanlon</groupId>
+    <artifactId>elasticsearch-sql</artifactId>
+    <version>1.0-SNAPSHOT</version>
+</dependency>
+
+```
+
 主要使用这个工具类 ： SQLToEsDSLUtils
+
+
+然后按照如下单元测试例子中直接使用即可将SQL转为ES 的DSL 语言
 
 
 # 代码示例
@@ -58,6 +65,26 @@ public class SqlToEsDslUtilsTest {
 
 运行结果
 
+```
+转化sql1的结果：{"from":0,"size":5,"query":{"bool":{"must":[{"range":{"dt_time":{"from":"202105081313+0800","to":null,"include_lower":true,"include_upper":true,"boost":1.0}}},{"range":{"dt_time":{"from":null,"to":"202105081413+0800","include_lower":true,"include_upper":true,"boost":1.0}}},{"term":{"appid":{"value":"15013","boost":1.0}}},{"terms":{"uid":["2524712316","2706555022"],"boost":1.0}}],"adjust_pure_negative":true,"boost":1.0}},"_source":{"includes":["dt","uid","appid","time","dt_time"],"excludes":[]},"sort":[{"dt_time":{"order":"desc"}},{"time":{"order":"desc"}}]}
+转化sql2的结果：{"query":{"bool":{"must":[{"term":{"dt":{"value":"12","boost":1.0}}},{"wildcard":{"country":{"wildcard":"*张三*","boost":1.0}}}],"adjust_pure_negative":true,"boost":1.0}}}
+转化sql3的结果：{"from":0,"size":10,"query":{"bool":{"must":[{"term":{"dt":{"value":"asdf","boost":1.0}}}],"adjust_pure_negative":true,"boost":1.0}}}
+转化sql4的结果：{"query":{"bool":{"must":[{"term":{"dt":{"value":"asdf","boost":1.0}}}],"adjust_pure_negative":true,"boost":1.0}}}
+转化sql5的结果：{"from":0,"size":10,"query":{"bool":{"must":[{"term":{"dt":{"value":"adsf","boost":1.0}}}],"adjust_pure_negative":true,"boost":1.0}},"sort":[{"desc":{"order":"desc"}}]}
+转化sql6的结果：{"from":0,"size":10,"query":{"bool":{"must":[{"range":{"dt_time":{"from":"202105091817+0800","to":null,"include_lower":true,"include_upper":true,"boost":1.0}}},{"range":{"dt_time":{"from":null,"to":"202105111817+0800","include_lower":true,"include_upper":true,"boost":1.0}}},{"wildcard":{"country":{"wildcard":"*中国黑龙江绥化*","boost":1.0}}}],"adjust_pure_negative":true,"boost":1.0}}}
+转化sql7的结果：{"query":{"bool":{"must":[{"range":{"dt_time":{"from":"202105092057+0800","to":null,"include_lower":true,"include_upper":true,"boost":1.0}}},{"range":{"dt_time":{"from":null,"to":"202105112057+0800","include_lower":true,"include_upper":true,"boost":1.0}}},{"term":{"act":{"value":"7609","boost":1.0}}}],"adjust_pure_negative":true,"boost":1.0}}}
+转化sql8的结果：{"from":0,"size":10,"query":{"bool":{"must":[{"range":{"dt_time":{"from":"202105092057+0800","to":null,"include_lower":true,"include_upper":true,"boost":1.0}}},{"range":{"dt_time":{"from":null,"to":"202105112057+0800","include_lower":true,"include_upper":true,"boost":1.0}}},{"term":{"act":{"value":"7609","boost":1.0}}}],"adjust_pure_negative":true,"boost":1.0}}}
+转化sql1的请求参数结果：SearchRequest{searchType=QUERY_THEN_FETCH, indices=[default.test_t1], indicesOptions=IndicesOptions[ignore_unavailable=false, allow_no_indices=true, expand_wildcards_open=true, expand_wildcards_closed=false, allow_aliases_to_multiple_indices=true, forbid_closed_indices=true, ignore_aliases=false, ignore_throttled=true], types=[], routing='null', preference='null', requestCache=null, scroll=null, maxConcurrentShardRequests=0, batchedReduceSize=512, preFilterShardSize=128, allowPartialSearchResults=null, localClusterAlias=null, getOrCreateAbsoluteStartMillis=-1, ccsMinimizeRoundtrips=true, source={"from":0,"size":5,"query":{"bool":{"must":[{"range":{"dt_time":{"from":"202105081313+0800","to":null,"include_lower":true,"include_upper":true,"boost":1.0}}},{"range":{"dt_time":{"from":null,"to":"202105081413+0800","include_lower":true,"include_upper":true,"boost":1.0}}},{"term":{"appid":{"value":"15013","boost":1.0}}},{"terms":{"uid":["2524712316","2706555022"],"boost":1.0}}],"adjust_pure_negative":true,"boost":1.0}},"_source":{"includes":["dt","uid","appid","time","dt_time"],"excludes":[]},"sort":[{"dt_time":{"order":"desc"}},{"time":{"order":"desc"}}]}}
+转化sql2的请求参数结果：SearchRequest{searchType=QUERY_THEN_FETCH, indices=[default.test_t2], indicesOptions=IndicesOptions[ignore_unavailable=false, allow_no_indices=true, expand_wildcards_open=true, expand_wildcards_closed=false, allow_aliases_to_multiple_indices=true, forbid_closed_indices=true, ignore_aliases=false, ignore_throttled=true], types=[], routing='null', preference='null', requestCache=null, scroll=null, maxConcurrentShardRequests=0, batchedReduceSize=512, preFilterShardSize=128, allowPartialSearchResults=null, localClusterAlias=null, getOrCreateAbsoluteStartMillis=-1, ccsMinimizeRoundtrips=true, source={"query":{"bool":{"must":[{"term":{"dt":{"value":"12","boost":1.0}}},{"wildcard":{"country":{"wildcard":"*张三*","boost":1.0}}}],"adjust_pure_negative":true,"boost":1.0}}}}
+转化sql3的请求参数结果：SearchRequest{searchType=QUERY_THEN_FETCH, indices=[default.test_t3], indicesOptions=IndicesOptions[ignore_unavailable=false, allow_no_indices=true, expand_wildcards_open=true, expand_wildcards_closed=false, allow_aliases_to_multiple_indices=true, forbid_closed_indices=true, ignore_aliases=false, ignore_throttled=true], types=[], routing='null', preference='null', requestCache=null, scroll=null, maxConcurrentShardRequests=0, batchedReduceSize=512, preFilterShardSize=128, allowPartialSearchResults=null, localClusterAlias=null, getOrCreateAbsoluteStartMillis=-1, ccsMinimizeRoundtrips=true, source={"from":0,"size":10,"query":{"bool":{"must":[{"term":{"dt":{"value":"asdf","boost":1.0}}}],"adjust_pure_negative":true,"boost":1.0}}}}
+转化sql4的请求参数结果：SearchRequest{searchType=QUERY_THEN_FETCH, indices=[default.test_t4, default.test_t3], indicesOptions=IndicesOptions[ignore_unavailable=false, allow_no_indices=true, expand_wildcards_open=true, expand_wildcards_closed=false, allow_aliases_to_multiple_indices=true, forbid_closed_indices=true, ignore_aliases=false, ignore_throttled=true], types=[], routing='null', preference='null', requestCache=null, scroll=null, maxConcurrentShardRequests=0, batchedReduceSize=512, preFilterShardSize=128, allowPartialSearchResults=null, localClusterAlias=null, getOrCreateAbsoluteStartMillis=-1, ccsMinimizeRoundtrips=true, source={"query":{"bool":{"must":[{"term":{"dt":{"value":"asdf","boost":1.0}}}],"adjust_pure_negative":true,"boost":1.0}}}}
+转化sql5的请求参数结果：SearchRequest{searchType=QUERY_THEN_FETCH, indices=[default.test_t5, default.test12, default.test_t7], indicesOptions=IndicesOptions[ignore_unavailable=false, allow_no_indices=true, expand_wildcards_open=true, expand_wildcards_closed=false, allow_aliases_to_multiple_indices=true, forbid_closed_indices=true, ignore_aliases=false, ignore_throttled=true], types=[], routing='null', preference='null', requestCache=null, scroll=null, maxConcurrentShardRequests=0, batchedReduceSize=512, preFilterShardSize=128, allowPartialSearchResults=null, localClusterAlias=null, getOrCreateAbsoluteStartMillis=-1, ccsMinimizeRoundtrips=true, source={"from":0,"size":10,"query":{"bool":{"must":[{"term":{"dt":{"value":"adsf","boost":1.0}}}],"adjust_pure_negative":true,"boost":1.0}},"sort":[{"desc":{"order":"desc"}}]}}
+转化sql6的请求参数结果：SearchRequest{searchType=QUERY_THEN_FETCH, indices=[default.test_t6, default.test_t7, default.test_t123], indicesOptions=IndicesOptions[ignore_unavailable=false, allow_no_indices=true, expand_wildcards_open=true, expand_wildcards_closed=false, allow_aliases_to_multiple_indices=true, forbid_closed_indices=true, ignore_aliases=false, ignore_throttled=true], types=[], routing='null', preference='null', requestCache=null, scroll=null, maxConcurrentShardRequests=0, batchedReduceSize=512, preFilterShardSize=128, allowPartialSearchResults=null, localClusterAlias=null, getOrCreateAbsoluteStartMillis=-1, ccsMinimizeRoundtrips=true, source={"from":0,"size":10,"query":{"bool":{"must":[{"range":{"dt_time":{"from":"202105091817+0800","to":null,"include_lower":true,"include_upper":true,"boost":1.0}}},{"range":{"dt_time":{"from":null,"to":"202105111817+0800","include_lower":true,"include_upper":true,"boost":1.0}}},{"wildcard":{"country":{"wildcard":"*中国黑龙江绥化*","boost":1.0}}}],"adjust_pure_negative":true,"boost":1.0}}}}
+转化sql7的请求参数结果：SearchRequest{searchType=QUERY_THEN_FETCH, indices=[default.test_t7, default.test_t8, default.test_t11,], indicesOptions=IndicesOptions[ignore_unavailable=false, allow_no_indices=true, expand_wildcards_open=true, expand_wildcards_closed=false, allow_aliases_to_multiple_indices=true, forbid_closed_indices=true, ignore_aliases=false, ignore_throttled=true], types=[], routing='null', preference='null', requestCache=null, scroll=null, maxConcurrentShardRequests=0, batchedReduceSize=512, preFilterShardSize=128, allowPartialSearchResults=null, localClusterAlias=null, getOrCreateAbsoluteStartMillis=-1, ccsMinimizeRoundtrips=true, source={"query":{"bool":{"must":[{"range":{"dt_time":{"from":"202105092057+0800","to":null,"include_lower":true,"include_upper":true,"boost":1.0}}},{"range":{"dt_time":{"from":null,"to":"202105112057+0800","include_lower":true,"include_upper":true,"boost":1.0}}},{"term":{"act":{"value":"7609","boost":1.0}}}],"adjust_pure_negative":true,"boost":1.0}}}}
+转化sql8的请求参数结果：SearchRequest{searchType=QUERY_THEN_FETCH, indices=[default.test_t8, default.test_t11, default.test_t13], indicesOptions=IndicesOptions[ignore_unavailable=false, allow_no_indices=true, expand_wildcards_open=true, expand_wildcards_closed=false, allow_aliases_to_multiple_indices=true, forbid_closed_indices=true, ignore_aliases=false, ignore_throttled=true], types=[], routing='null', preference='null', requestCache=null, scroll=null, maxConcurrentShardRequests=0, batchedReduceSize=512, preFilterShardSize=128, allowPartialSearchResults=null, localClusterAlias=null, getOrCreateAbsoluteStartMillis=-1, ccsMinimizeRoundtrips=true, source={"from":0,"size":10,"query":{"bool":{"must":[{"range":{"dt_time":{"from":"202105092057+0800","to":null,"include_lower":true,"include_upper":true,"boost":1.0}}},{"range":{"dt_time":{"from":null,"to":"202105112057+0800","include_lower":true,"include_upper":true,"boost":1.0}}},{"term":{"act":{"value":"7609","boost":1.0}}}],"adjust_pure_negative":true,"boost":1.0}}}}
+```
+
 
 # 项目功能搭建思路
 
+主要使用Druid的SQL解析工具，将SQL按照各个节点分解，然后重新组装为ES的DSL信息
