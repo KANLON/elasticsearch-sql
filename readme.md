@@ -87,6 +87,40 @@ public class SqlToEsDslUtilsTest {
 ```
 
 
+# 目前支持的语法
+
+当前只支持条件为and条件连接的，还不支持的复杂的条件嵌套和不支持函数；其他基本就是mysql的语法
+
+查询的表会作为es的index（索引），查询的列作为field（Document中的字段，是文档中的某一个属性）返回 
+
+例如：
+ 
+支持 
+```sql
+select col1,col2 from t where a in (1) and b =2 and dt>="2022-01-01"
+```
+
+不支持
+```sql
+select col1,col2 from t where a in (1) and b =2 and dt>="2022-01-01" or ( d in (10,22) )
+``` 
+
+
+
+- [x] SQL Select  
+- [x] SQL Where  
+- [x] SQL Order by
+- [x] SQL And & Or
+- [x] SQL In
+- [x] SQL like
+- [x] SQL Between And
+- [x] SQL union all (这个需要确保条件一样，只是查询的表不一样)
+- [x] SQL Limit
+- [ ] SQL Is
+- [ ] SQL Not
+- [ ] SQL Null
+- [ ] SQL Group by
+
 # 项目功能搭建思路
 
 主要使用Druid的SQL解析工具，将SQL解析成AST(抽象语法树)，然后重新组装为ES的DSL信息
