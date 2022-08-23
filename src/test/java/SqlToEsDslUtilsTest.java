@@ -30,6 +30,7 @@ public class SqlToEsDslUtilsTest {
         String sql7 = "SELECT count(1) AS num FROM (  SELECT *  FROM `default.test_t7`  WHERE dt_time >= '202105092057+0800'   AND dt_time <= '202105112057+0800'   AND act = '7609'  UNION ALL  SELECT *  FROM `default.test_t8`  WHERE dt_time >= '202105092057+0800'   AND dt_time <= '202105112057+0800'   AND act = '7609'  UNION ALL  SELECT *  FROM `default.test_t11,`  WHERE dt_time >= '202105092057+0800'   AND dt_time <= '202105112057+0800'   AND act = '7609'  LIMIT 2147483647 ) temp_t ";
         String sql8 = "SELECT * FROM `default.test_t8` WHERE dt_time >= '202105092057+0800'  AND dt_time <= '202105112057+0800'  AND act = '7609' UNION ALL SELECT * FROM `default.test_t11` WHERE dt_time >= '202105092057+0800'  AND dt_time <= '202105112057+0800'  AND act = '7609' UNION ALL SELECT * FROM `default.test_t13` WHERE dt_time >= '202105092057+0800'  AND dt_time <= '202105112057+0800'  AND act = '7609' LIMIT 10";
         try {
+            // 下面得到的实例信息，toString 之后，是原生es的 DSL 语法，将该json 作为body可以直接通过ES 的RESTful API查询es
             System.out.println("转化sql1的结果：" + SQLToEsDSLUtils.sqlToEsDslQueryBody(sql1));
             System.out.println("转化sql2的结果：" + SQLToEsDSLUtils.sqlToEsDslQueryBody(sql2));
             System.out.println("转化sql3的结果：" + SQLToEsDSLUtils.sqlToEsDslQueryBody(sql3));
@@ -38,6 +39,7 @@ public class SqlToEsDslUtilsTest {
             System.out.println("转化sql6的结果：" + SQLToEsDSLUtils.sqlToEsDslQueryBody(sql6));
             System.out.println("转化sql7的结果：" + SQLToEsDSLUtils.sqlToEsDslQueryBody(sql7));
             System.out.println("转化sql8的结果：" + SQLToEsDSLUtils.sqlToEsDslQueryBody(sql8));
+            // 下面的包含 index信息，通过得到的这个 SearchRequest 这个实例 ，可以由该实例传到RestHighLevelClient#search 中去es查询获取结果
             System.out.println("转化sql1的请求参数结果：" + SQLToEsDSLUtils.sqlToEsSearchRequest(sql1));
             System.out.println("转化sql2的请求参数结果：" + SQLToEsDSLUtils.sqlToEsSearchRequest(sql2));
             System.out.println("转化sql3的请求参数结果：" + SQLToEsDSLUtils.sqlToEsSearchRequest(sql3));
