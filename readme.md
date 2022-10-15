@@ -13,7 +13,7 @@ maven 引用
 <dependency>
     <groupId>com.github.kanlon</groupId>
     <artifactId>elasticsearch-sql</artifactId>
-    <version>1.0.0</version>
+    <version>1.0.1</version>
 </dependency>
 
 ```
